@@ -25,7 +25,6 @@ const addCourse = async (req, res) => {
   if (!errors.isEmpty()) {
     res.status(400).json(errors.array());
   }
-
   const newCourse = new Course(req.body);
   await newCourse.save();
 

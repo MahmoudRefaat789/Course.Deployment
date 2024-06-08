@@ -5,7 +5,7 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  rpice: {
+  price: {
     type: Number,
     required: true,
   },

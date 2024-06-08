@@ -19,6 +19,7 @@ router
       .withMessage("price is reqruired")
       .isLength({ min: 3 })
       .withMessage("at least 3 digits"),
+
     coursesControllers.addCourse
   );
 
