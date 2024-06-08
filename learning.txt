@@ -1,0 +1,82 @@
+const express = require("express");
+const { body, validationResult } = require("express-validator");
+const app = express();
+
+app.use(express.json());
+
+let courses = [
+  { id: 1, title: "js course", price: 1000 },
+  { id: 2, title: "react course", price: 2000 },
+];
+
+// get all
+app.get("/api/courses", (req, res) => {
+  res.json(courses);
+});
+
+// get single
+app.get(
+  "/api/courses/:id",
+
+  (req, res) => {
+    const courseId = +req.params.id;
+    const course = courses.find((course) => course.id === courseId);
+
+    if (!course) {
+      res.status(404).json({ msg: "Course Not Found" });
+    } else {
+      res.json(course);
+    }
+  }
+);
+
+// create
+app.post(
+  "/api/courses",
+  body("title")
+    .notEmpty()
+    .withMessage("title is reqruired")
+    .isLength({ min: 2 })
+    .withMessage("at least 2 digits"),
+  body("price")
+    .notEmpty()
+    .withMessage("price is reqruired")
+    .isLength({ min: 3 })
+    .withMessage("at least 3 digits"),
+  (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(400).json(errors.array());
+    }
+
+    const newCourse = { id: courses.length + 1, ...req.body };
+    courses.push(newCourse);
+
+    res.json(newCourse);
+  }
+);
+
+// edit
+app.patch(
+  ("/api/courses/:courseId",
+  (req, res) => {
+    const id = +req.params.courseId;
+    console.log(id);
+    let course = courses.find((course) => course.id === id);
+
+    course = { ...course, ...req.body };
+    res.status(200).json(course);
+  })
+);
+// delete
+app.delete("/api/courses/:courseId", (req, res) => {
+  const id = +req.params.courseId;
+  courses = courses.filter((course) => course.id !== id);
+
+  res.json({ success: true });
+});
+
+app.listen("5000", () => {
+  console.log("app listening at port 5000");
+});
